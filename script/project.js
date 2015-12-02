@@ -9,8 +9,10 @@ window.onload = function() {
   canvas.height = H;
 
   var score = [0,0];
-  var scoreBoard = 10;
+  //var 10 = 10;
   var winner = false;
+
+  var startB;
 
   var keys = {
     p1: {
@@ -20,8 +22,20 @@ window.onload = function() {
     p2: {
       up: false,
       down: false
+    },
+    restart: {
+      spacebar: false
     }
   }
+  var reset = function () {
+    isGameStarted = false;
+
+    ball.x = (canvas.width - ball.size) / 2;
+    ball.y = (canvas.height - ball.size) / 2;
+
+    ball.speedX = randomize(); // randomly start going left or right
+    ball.speedY = 0;
+}
 
   var players = [
     new Player("left"),
@@ -54,11 +68,25 @@ window.onload = function() {
     {
       if(this.x < 0)
       {
-        winner = 2;
+        //this.velx *= -1;
+        if(score[1] == 6){
+          winner = true;
+          winner = 2
+        };
+        score[1]++;// =+ 1;
+        reset();
+
       }
       else if(this.x > W - this.size)
       {
-        winner = 1;
+        //this.velx *= -1;
+        if(score[0] == 6){
+          console.log('hi')
+          winner = true;
+          winner = 1
+        };
+        score[0]++;// =+ 1;
+        reset();
       }
       else
       {
@@ -80,13 +108,13 @@ window.onload = function() {
           if(this.y > p1.y && this.y < p1.y + p1.sizeLength)
           {
             this.velx *= -1;
-            score[0] += scoreBoard;
+            //score[0] += 1;
           }
         if(this.x > p2.x && this.x < p2.x + p2.sizeWidth)
           if(this.y > p2.y && this.y < p2.y + p2.sizeLength)
           {
             this.velx *= -1;
-            score[1] += scoreBoard;
+            //score[1] += 1;
           }
 
         this.x += this.velx;
@@ -136,6 +164,9 @@ window.onload = function() {
         {
           this.y -= this.speed;
         }
+        if(keys.restart.spacebar){
+
+        }
       }
     }
     //this.y = Math.max(Math.min(H- this.sizeLength), 0);
@@ -149,7 +180,7 @@ window.onload = function() {
     {
       var text = winner == 1 ? "Player 1 Wins!" : "Player 2 Wins!";
       var color = winner == 1 ? "white" : "white";
-      var score2 = winner == 1 ? score[0] : score[1];
+      var score2 = winner == 1 ? score[0]: score[1];
 
       ctx.font = "40px Comic";
       ctx.fillStyle = color;
@@ -174,6 +205,10 @@ window.onload = function() {
       ctx.fillText("Player 1: "+score[0], 15, 35);
       ctx.fillText("Player 2: "+score[1], 15, 55);
     }
+    // Reset the game
+  if (!isGameStarted) {
+    //ctx.fillText("Press spacebar to start", 200, canvas.height / 2);
+  }
   }
 
   function keyUp(event)
@@ -196,6 +231,10 @@ window.onload = function() {
 
       case 76:
         keys.p2.down = false;
+      break;
+
+      case 32:
+        keys.restart.spacebar  = false;
       break;
     }
   }
@@ -222,7 +261,12 @@ window.onload = function() {
       case 76:
         keys.p2.down = true;
       break;
+
+      case 32:
+        keys.restart.spacebar = true;
+      break;
     }
+
   }
 
   document.addEventListener("keydown", keyDown);
