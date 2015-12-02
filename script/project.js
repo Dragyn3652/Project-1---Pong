@@ -1,24 +1,15 @@
-
 window.onload = function() {
 
   var canvas = document.getElementById("canvas"),
     ctx = canvas.getContext("2d"),
-    W = window.innerHeight;
-    H = window.innerHeight;
+    W = 600;
+    H = 700;
 
   canvas.width = W;
   canvas.height = H;
 
-  var w = 4;
-  var x = (width - w)=0.5;
-  var y = 0;
-  var stop = height/15;
-  while (y < height){
-    ctx.fillRect(x, y+step+0.25, w, step+0.5)
-    y += step;
-  }
   var score = [0,0];
-  var scoreInc = 10;
+  var scoreBoard = 10;
   var winner = false;
 
   var keys = {
@@ -89,13 +80,13 @@ window.onload = function() {
           if(this.y > p1.y && this.y < p1.y + p1.sizeLength)
           {
             this.velx *= -1;
-            score[0] += scoreInc;
+            score[0] += scoreBoard;
           }
         if(this.x > p2.x && this.x < p2.x + p2.sizeWidth)
           if(this.y > p2.y && this.y < p2.y + p2.sizeLength)
           {
             this.velx *= -1;
-            score[1] += scoreInc;
+            score[1] += scoreBoard;
           }
 
         this.x += this.velx;
@@ -106,13 +97,13 @@ window.onload = function() {
   function Player(side)
   {
     this.side = side;
-    this.style = side == "left" ? "white" : "white";
-    this.sizeWidth = 25;
+    this.style = "white";
+    this.sizeWidth = 20;
     this.sizeLength = 100;
 
     this.x = side == "left" ? 100 : W-100;
     this.y = (H / 2) - (this.sizeLength / 2);
-
+    //this.y += y;
     this.speed = 10;
 
     this.draw = function()
@@ -125,31 +116,32 @@ window.onload = function() {
     {
       if(this.side == "left")
       {
-        if(keys.p1.down)
+        if((keys.p1.down) && (this.y+this.sizeLength < H))
         {
           this.y += this.speed;
         }
-        if(keys.p1.up)
+        if((keys.p1.up) && (this.y > 0))
         {
           this.y -= this.speed;
         }
       }
       else
       {
-        if(keys.p2.down)
+        if((keys.p2.down) && (this.y+this.sizeLength < H))
         {
           this.y += this.speed;
         }
-        if(keys.p2.up)
+        if((keys.p2.up) && (this.y > 0))
+
         {
           this.y -= this.speed;
         }
       }
     }
+    //this.y = Math.max(Math.min(H- this.sizeLength), 0);
   }
   function draw()
   {
-    ctx.globalCompositeOperation = "source-over";
     ctx.fillStyle = "black";
     ctx.fillRect(0,0,W,H);
 
@@ -159,10 +151,10 @@ window.onload = function() {
       var color = winner == 1 ? "white" : "white";
       var score2 = winner == 1 ? score[0] : score[1];
 
-      ctx.font = "40px Arial";
+      ctx.font = "40px Comic";
       ctx.fillStyle = color;
       ctx.fillText(text, 30, H / 2);
-      ctx.font = "16px Arial";
+      ctx.font = "16px Comic";
       ctx.fillStyle = "white;"
       ctx.fillText("Scored "+score2, 30, 40 + H / 2) ;
     }
@@ -183,31 +175,25 @@ window.onload = function() {
       ctx.fillText("Player 2: "+score[1], 15, 55);
     }
   }
-  function resizeCanvas()
-  {
-    W = window.innerWidth;
-    H = window.innerHeight;
 
-    canvas.width = W;
-    canvas.height = H;
-  }
   function keyUp(event)
   {
     switch(event.which)
     {
-      //player 1 UP
-      case 65:
+      //player 1
+      case 81:
         keys.p1.up = false;
       break;
-      //player 1 DOWN
-      case 90:
+
+      case 65:
         keys.p1.down = false;
       break;
-      //player 2 UP
+
+      //player 2
       case 80:
         keys.p2.up = false;
       break;
-      //player 2 DOWN
+
       case 76:
         keys.p2.down = false;
       break;
@@ -219,19 +205,20 @@ window.onload = function() {
 
     switch(event.which)
     {
-      //player 1 UP
-      case 65:
+      //player1
+      case 81:
         keys.p1.up = true;
       break;
-      //player 1 DOWN
-      case 90:
+
+      case 65:
         keys.p1.down = true;
       break;
-      //player 2 UP
+
+      //player2
       case 80:
         keys.p2.up = true;
       break;
-      //player 2 DOWN
+
       case 76:
         keys.p2.down = true;
       break;
@@ -240,7 +227,6 @@ window.onload = function() {
 
   document.addEventListener("keydown", keyDown);
   document.addEventListener("keyup", keyUp);
-  window.onresize = resizeCanvas;
 }
 
 function ranInt(Min, Max)
