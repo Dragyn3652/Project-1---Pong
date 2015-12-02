@@ -11,8 +11,8 @@ window.onload = function() {
   var score = [0,0];
   //var 10 = 10;
   var winner = false;
-
-  var startB;
+  var loser = false;
+  var isGameStarted = false;
 
   var keys = {
     p1: {
@@ -28,13 +28,12 @@ window.onload = function() {
     }
   }
   var reset = function () {
-    isGameStarted = false;
 
     ball.x = (canvas.width - ball.size) / 2;
     ball.y = (canvas.height - ball.size) / 2;
 
-    ball.speedX = randomize(); // randomly start going left or right
-    ball.speedY = 0;
+    ball.velX = ranInt(0,1) == 0 ? -5 : 5; // randomly start going left or right
+    ball.velY = ranInt(0,1) == 0 ? -5 : 5;
 }
 
   var players = [
@@ -73,6 +72,10 @@ window.onload = function() {
           winner = true;
           winner = 2
         };
+        //if(score[0] == 6){
+          //loser = true;
+          //loser = 2
+        //};
         score[1]++;// =+ 1;
         reset();
 
@@ -81,10 +84,13 @@ window.onload = function() {
       {
         //this.velx *= -1;
         if(score[0] == 6){
-          console.log('hi')
           winner = true;
           winner = 1
         };
+        //if(score[1] == 6){
+          //loser = true;
+          //loser = 2
+        //};
         score[0]++;// =+ 1;
         reset();
       }
@@ -142,7 +148,7 @@ window.onload = function() {
 
     this.update = function()
     {
-      if(this.side == "left")
+    if(this.side == "left")
       {
         if((keys.p1.down) && (this.y+this.sizeLength < H))
         {
@@ -164,9 +170,6 @@ window.onload = function() {
         {
           this.y -= this.speed;
         }
-        if(keys.restart.spacebar){
-
-        }
       }
     }
     //this.y = Math.max(Math.min(H- this.sizeLength), 0);
@@ -176,7 +179,7 @@ window.onload = function() {
     ctx.fillStyle = "black";
     ctx.fillRect(0,0,W,H);
 
-    if(winner != false)
+    if(winner)
     {
       var text = winner == 1 ? "Player 1 Wins!" : "Player 2 Wins!";
       var color = winner == 1 ? "white" : "white";
@@ -185,10 +188,12 @@ window.onload = function() {
       ctx.font = "40px Comic";
       ctx.fillStyle = color;
       ctx.fillText(text, 30, H / 2);
+      ctx.fillText("Press Spacebar To Play Again", 70, canvas.height / 3);
       ctx.font = "16px Comic";
       ctx.fillStyle = "white;"
       ctx.fillText("Scored "+score2, 30, 40 + H / 2) ;
-    }
+      //ctx.fillText("Press spacebar to Play Again", 200, canvas.height / 3);
+      }
     else
     {
       for(var i = 0; i < players.length; i++)
@@ -205,10 +210,6 @@ window.onload = function() {
       ctx.fillText("Player 1: "+score[0], 15, 35);
       ctx.fillText("Player 2: "+score[1], 15, 55);
     }
-    // Reset the game
-  if (!isGameStarted) {
-    //ctx.fillText("Press spacebar to start", 200, canvas.height / 2);
-  }
   }
 
   function keyUp(event)
@@ -263,7 +264,9 @@ window.onload = function() {
       break;
 
       case 32:
-        keys.restart.spacebar = true;
+        if(winner){
+          location.reload()
+        }
       break;
     }
 
