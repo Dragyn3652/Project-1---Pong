@@ -68,7 +68,7 @@ window.onload = function() {
       if(this.x < 0)
       {
         //this.velx *= -1;
-        if(score[1] == 6){
+        if(score[1] == 4){
           winner = true;
           winner = 2
         };
@@ -83,7 +83,7 @@ window.onload = function() {
       else if(this.x > W - this.size)
       {
         //this.velx *= -1;
-        if(score[0] == 6){
+        if(score[0] == 4){
           winner = true;
           winner = 1
         };
